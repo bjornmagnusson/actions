@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:stable-git
+        environment:
+          DOCKER_IMAGE_NAME: bjornmagnusson/balena-deployer
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 18.05.0-ce
+      - run:
+          name: Build Docker images
+          command: |
+            CWD=$PWD
+            ACTIONS=$(ls -d */)
+            for action in $ACTIONS; do
+              cd $PWD/$action
+              docker image build -t bjornmagnusson/$(basename $PWD):${CIRCLE_SHA1} .
+              if [[ ! -z "${CIRCLE_TAG}" ]]; then
+                docker image build -t bjornmagnusson/$(basename $PWD):${CIRCLE_TAG} .
+              fi
+            done
+      - deploy:
+          name: Push Docker image to Docker Hub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            CWD=$PWD
+            ACTIONS=$(ls -d */)
+            for action in $ACTIONS; do
+              cd $PWD/$action
+              docker image push bjornmagnusson/$(basename $PWD):${CIRCLE_SHA1}
+              if [[ ! -z "${CIRCLE_TAG}" ]]; then
+                docker image push bjornmagnusson/$(basename $PWD):${CIRCLE_TAG}
+              fi
+            done
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          context: DOCKER_HUB
