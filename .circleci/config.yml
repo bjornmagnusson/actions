@@ -23,7 +23,7 @@ jobs:
               fi
               if [[ "${CIRCLE_BRANCH}" = "master" ]]; then
                 docker image build -t $DOCKER_USER/$(basename $PWD):canary .
-                docker image push $$DOCKER_USER/$(basename $PWD):canary
+                docker image push $DOCKER_USER/$(basename $PWD):canary
               fi
             done
 workflows:
