@@ -1,12 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 set -o pipefail
 
-$BALENA_APP=$1
 if [[ -z "$BALENA_TOKEN" ]]; then
   echo "Set the BALENA_TOKEN env variable."
   exit 1
 fi
 
-balena login --token $BALENA_TOKEN
-balena deploy $BALENA_APP
+DEBUG=1 balena login --token $BALENA_TOKEN
+DEBUG=1 balena deploy "$@"
