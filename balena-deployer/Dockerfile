@@ -8,7 +8,7 @@ FROM debian:buster-slim as test
 COPY --from=builder /balena-cli/balena /usr/bin/balena
 RUN balena
 
-FROM docker:stable as dist
+FROM debian:buster-slim as dist
 LABEL "com.github.actions.name"="Balena Cloud deployer"
 LABEL "com.github.actions.description"="Deploy IoT app on Balena Cloud"
 LABEL "com.github.actions.icon"="upload-cloud"
