@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-set -o pipefail
 
 if [[ -z "$BALENA_TOKEN" ]]; then
   echo "Set the BALENA_TOKEN env variable."
