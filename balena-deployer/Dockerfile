@@ -1,6 +1,6 @@
 FROM debian:buster-slim as builder
 ENV BALENA_CLI_VERSION 9.11.0
-RUN apt-get update && apt-get install unzip
+RUN apt-get update && apt-get install -y --no-install-recommends unzip=6.0-23+deb10u1
 ADD https://github.com/balena-io/balena-cli/releases/download/v$BALENA_CLI_VERSION/balena-cli-v$BALENA_CLI_VERSION-linux-x64.zip /
 RUN unzip balena-cli-v$BALENA_CLI_VERSION-linux-x64.zip
 
@@ -15,6 +15,6 @@ LABEL "com.github.actions.icon"="upload-cloud"
 LABEL "com.github.actions.color"="red"
 
 COPY --from=builder /balena-cli/balena /usr/bin/balena
-ADD balena-deploy.sh /usr/bin/balena-deploy.sh
+COPY balena-deploy.sh /usr/bin/balena-deploy.sh
 RUN chmod +x /usr/bin/balena-deploy.sh
 ENTRYPOINT ["/usr/bin/balena-deploy.sh"]
